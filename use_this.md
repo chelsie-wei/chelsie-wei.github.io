@@ -4,10 +4,9 @@ layout: default
 
 ## About Me
 
-<img class="profile-picture" src="headshot.png">
+<img class="profile-picture" src="sherlock.jpg">
 
 Hi! I am a first year masters student at [Tufts Department of Computer Science](https://engineering.tufts.edu/cs/) in Boston, MA. 
-Previously, I was an undergraduate student at Tufts studying Cognitive and Brain Science and International Literary and Visual Studies. 
 
 ## Research Interest
 

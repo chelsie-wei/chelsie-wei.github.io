@@ -1,4 +1,4 @@
-title: Researcher
+title: Chelsie Wei
 url: "https://ankitsultana.com"
 baseurl: "/researcher"
 
@@ -18,7 +18,7 @@ sass:
 nav:
  - name: "About"
    link: "/researcher/"
- - name: "Resume"
-   link: "resume.pdf"
+ - name: "CV"
+   link: "CV_forthcoming.pdf"
  - name: "Contact"
    link: "contact"
