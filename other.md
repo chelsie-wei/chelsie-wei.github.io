@@ -5,7 +5,7 @@ is_contact: true
 
 One of my favorite things to do is listen to & play Renaissance / Baroque / European early music. 
 
-I wrote about my experience with early music for a Viola da Gamba Society (New England) [newsletter](https://docs.google.com/document/d/1yVaHInbiDgooYWG_iDnGjndPoJv9RLDUdYW_RlO502o/edit?usp=sharing) in 2022. 
+I wrote about my experience with early music for a Viola da Gamba Society (New England) [newsletter](https://vdgsne.org/wp-content/uploads/2017/09/VdGS-NE-Spring-newsletter-2022.pdf) in 2022. 
 
 Many early music uses ancient musical themes. An example theme in Europe (and later, due to colonization, the Americas) is the tune [Folia](https://en.wikipedia.org/wiki/Folia).
 
