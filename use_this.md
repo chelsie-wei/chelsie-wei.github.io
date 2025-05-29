@@ -4,9 +4,13 @@ layout: default
 
 ## About Me
 
-<img class="profile-picture" src="sherlock.jpg">
+<img class="profile-picture" src="headshot.png">
 
-Hi! I am a first year masters student at [Tufts Department of Computer Science](https://engineering.tufts.edu/cs/) in Boston, MA. 
+Hi! I am a first-year masters student at [Tufts Department of Computer Science](https://engineering.tufts.edu/cs/) in Boston, MA. 
+Prior to this, I completed my undergraduate studies in Comparative Literature and Cognitive and Brain Science at Tufts, where I studied thought and intentionality. My senior thesis, presented at [NeMLA](https://www.nemla.org/content/dam/www/nemla/newsletters/NeMLA_Newsletter_2025_Winter.pdf), explored how literature grapples with the duty to think.
+
+Now I've moved on from human thought to animal intelligence, where I study the cognitive abilities 
+of two African Gray Parrots with [Dr. Irene Pepperberg](https://alexfoundation.org/). 
 
 ## Research Interest
 

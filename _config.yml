@@ -20,5 +20,5 @@ nav:
    link: "/researcher/"
  - name: "CV"
    link: "CV_forthcoming.pdf"
- - name: "Contact"
-   link: "contact"
+ - name: "Other"
+   link: "other"
