@@ -1,6 +1,6 @@
 title: Chelsie Wei
 url: "https://ankitsultana.com"
-baseurl: "/researcher"
+baseurl: ""
 
 markdown: kramdown
 #ins_logo: "./bits-logo.png"
@@ -17,8 +17,8 @@ sass:
 
 nav:
  - name: "About"
-   link: "/researcher/"
+   link: "/"
  - name: "CV"
-   link: "CV_forthcoming.pdf"
+   link: "/CV_forthcoming.pdf"
  - name: "Other"
-   link: "other"
+   link: "/other"
