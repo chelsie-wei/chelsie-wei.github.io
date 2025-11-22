@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubbly Study Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importing a rounded, bubbly font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Bubbly Theme Styles --- */
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%); /* Soft peach-pink gradient */
+            min-height: 100vh;
+        }
+
+        /* The Main "Bubble" Container */
+        .bubble-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem; /* Very round corners */
+            border: 4px solid #fff;
+            box-shadow: 
+                0 20px 40px rgba(255, 105, 180, 0.2), /* Pinkish shadow */
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Titles */
+        h1 {
+            color: #ff6b81; /* Hot pink */
+            text-shadow: 2px 2px 0px #ffe4e1;
+        }
+        .label-text {
+            color: #ff8da1;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Bubbly Inputs */
+        .bubble-input {
+            background-color: #fff0f5; /* Lavender Blush */
+            border: 2px solid #ffcce0;
+            border-radius: 1.5rem; /* Pill shape */
+            padding: 0.75rem 1.25rem;
+            color: #d63384;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy transition */
+        }
+        .bubble-input:focus {
+            outline: none;
+            border-color: #ff6b81;
+            background-color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 107, 129, 0.2);
+        }
+
+        /* Bubbly Buttons */
+        .btn-bubble {
+            border-radius: 9999px; /* Full pill */
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy hover */
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-bubble:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .btn-bubble:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Primary (Calculate) - Hot Pink Gradient */
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b81, #ff8e53);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+        }
+        
+        /* Secondary (Estimate) - Purple/Pink Gradient */
+        .btn-secondary {
+            background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+            color: white;
+            box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);
+        }
+
+        /* Estimation Result "Pop" Effect */
+        #estimationReasoning {
+            background-color: #e0f7fa; /* Light Cyan */
+            border: 3px solid #b2ebf2;
+            border-radius: 2rem;
+            padding: 0;
+            max-height: 0;
+            opacity: 0;
+            transform: scale(0.8);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            margin-top: 0;
+        }
+        #estimationReasoning.visible {
+            padding: 1.5rem;
+            max-height: 600px;
+            opacity: 1;
+            transform: scale(1);
+            margin-top: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Calendar Cards */
+        .day-bubble {
+            background-color: white;
+            border-radius: 1.2rem;
+            border: 2px solid #ffe4e1;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s;
+            color: #555;
+        }
+        .day-bubble:hover {
+            transform: rotate(2deg) scale(1.05);
+            border-color: #ff6b81;
+        }
+
+        /* Spinner */
+        .bubble-spinner {
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Result Section */
+        #resultOutput {
+            background-color: #fff5f8; /* Very light pink */
+            border-radius: 2rem;
+            border: 3px dashed #ffb7b2;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex items-center justify-center">
+
+    <div class="max-w-xl w-full bubble-container p-8 sm:p-10 relative">
+        <!-- Cute decorative circle -->
+        <div class="absolute -top-4 -left-4 w-16 h-16 bg-yellow-300 rounded-full border-4 border-white shadow-lg z-10 flex items-center justify-center text-2xl">✨</div>
+
+        <h1 class="text-4xl font-bold text-center mb-2">Bubbly Planner</h1>
+        <p class="text-center text-gray-500 mb-8 font-medium">Let's organize your study time! 💖</p>
+
+        <form id="allocationForm" class="space-y-6">
+
+            <!-- Assignment Name -->
+            <div>
+                <label for="assignmentName" class="label-text">Assignment Name</label>
+                <input type="text" id="assignmentName" placeholder="e.g., Super Important Project" class="bubble-input w-full mt-1" required>
+            </div>
+
+            <!-- Assignment Type -->
+            <div>
+                <label for="assignmentType" class="label-text">What kind of task?</label>
+                <div class="relative">
+                    <select id="assignmentType" class="bubble-input w-full mt-1 appearance-none cursor-pointer" required>
+                        <option value="Homework">Homework / Short Task 📝</option>
+                        <option value="Project">Big Project / Creative 🎨</option>
+                        <option value="Exam">Midterm Exam 📚</option>
+                        <option value="Final Exam">Final / Thesis 🎓</option>
+                    </select>
+                    <!-- Custom Arrow -->
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-pink-400">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Details for Estimation -->
+            <div class="pt-4">
+                <label for="assignmentRequirements" class="label-text">Tell me about it!</label>
+                <textarea id="assignmentRequirements" rows="4" placeholder="Paste your requirements here so I can help you guess the time! ✨" class="bubble-input w-full mt-1 resize-none"></textarea>
+                
+                <button type="button" id="estimateHoursBtn" class="btn-bubble btn-secondary w-full py-3 mt-4 flex items-center justify-center">
+                    <span id="estimateBtnText">✨ Magic Estimate ✨</span>
+                    <div id="estimateSpinner" class="bubble-spinner hidden"></div>
+                </button>
+            </div>
+            
+            <!-- Estimation Reasoning Output (Pop-up Bubble) -->
+            <div id="estimationReasoning">
+                <div class="flex items-center mb-2">
+                    <span class="text-2xl mr-2">💭</span>
+                    <h4 class="font-bold text-cyan-600 text-lg">My Thought Bubble:</h4>
+                </div>
+                <div id="reasoningText" class="text-gray-600 leading-relaxed text-sm"></div>
+            </div>
+
+            <!-- Estimated Total Hours -->
+            <div>
+                <label for="totalHours" class="label-text">Total Hours (Average)</label>
+                <input type="number" id="totalHours" min="1" placeholder="Hours go here!" class="bubble-input w-full mt-1 text-center font-bold text-lg" required>
+            </div>
+
+            <!-- Due Date -->
+            <div>
+                <label for="dueDate" class="label-text">When is it due?</label>
+                <input type="date" id="dueDate" class="bubble-input w-full mt-1 text-center cursor-pointer" required>
+            </div>
+
+            <button type="submit" class="btn-bubble btn-primary w-full py-4 text-lg shadow-xl transform transition">
+                Plan My Schedule! 📅
+            </button>
+        </form>
+
+        <!-- Result Display Area -->
+        <div id="resultOutput" class="mt-8 p-6 hidden">
+            <h3 class="text-2xl font-bold text-pink-500 mb-4 text-center">
+                💖 The Plan for <span id="outputName" class="text-purple-500"></span>
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                <div class="bg-white p-3 rounded-2xl border-2 border-pink-100">
+                    <p class="text-xs text-gray-400 font-bold uppercase">Time Left</p>
+                    <p class="text-xl font-bold text-pink-500"><span id="daysRemaining"></span> Days</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border-2 border-pink-100">
+                    <p class="text-xs text-gray-400 font-bold uppercase">Rest Days</p>
+                    <p class="text-xl font-bold text-purple-400"><span id="bufferDays"></span> Days</p>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-pink-400 to-orange-300 rounded-2xl p-4 text-center text-white shadow-lg mb-6 transform rotate-1 hover:rotate-0 transition">
+                <p class="text-sm opacity-90 font-medium uppercase tracking-wider">Daily Goal</p>
+                <p class="text-3xl font-bold mt-1" id="dailyHours"></p>
+            </div>
+
+            <!-- Calendar View Container -->
+            <div id="calendarViewContainer">
+                <h4 class="text-lg font-bold text-gray-600 mb-3 text-center">Your Study Path 🌈</h4>
+                <div id="calendarView" class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                    <!-- Calendar items will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <button id="downloadIcsBtn" class="btn-bubble w-full py-3 mt-6 bg-green-400 hover:bg-green-300 text-white shadow-md">
+                Save to Calendar 🍏
+            </button>
+        </div>
+
+        <!-- Error Message Area -->
+        <div id="errorMessage" class="hidden text-center p-4 mt-6 bg-red-100 text-red-500 font-bold rounded-2xl border-2 border-red-200">
+            <!-- Error messages -->
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal (Bubbly) -->
+    <div id="simpleAlertModal" class="fixed inset-0 bg-pink-900 bg-opacity-30 z-50 flex items-center justify-center transition-opacity duration-300 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] shadow-2xl max-w-sm w-full p-6 transform scale-100 border-4 border-pink-200">
+            <div class="text-center mb-4">
+                <div class="text-4xl mb-2">🌸</div>
+                <h5 id="alertTitle" class="text-xl font-bold text-pink-500"></h5>
+            </div>
+            <p id="alertMessage" class="text-gray-600 text-center mb-6 font-medium"></p>
+            <div class="flex justify-center">
+                <button id="okAlertBtn" class="btn-bubble bg-pink-400 text-white py-2 px-8 hover:bg-pink-300 shadow-lg">Okie Dokie!</button>
+            </div>
+            <button id="closeAlertBtn" class="absolute top-4 right-6 text-gray-300 hover:text-pink-400 font-bold text-xl">&times;</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Global constants for API access
+        const MODEL_NAME = 'gemini-2.5-flash-preview-09-2025';
+        const apiKey = "AIzaSyB62Zsp0iD7eKtAGVVBYv3KUbFUukQmMwQ"; // from Google AI Studio
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('allocationForm');
+            const resultOutput = document.getElementById('resultOutput');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const totalHoursInput = document.getElementById('totalHours');
+            const assignmentTypeSelect = document.getElementById('assignmentType');
+            const assignmentRequirements = document.getElementById('assignmentRequirements');
+            const estimateHoursBtn = document.getElementById('estimateHoursBtn');
+            const reasoningDiv = document.getElementById('estimationReasoning');
+            const reasoningText = document.getElementById('reasoningText');
+            const estimateBtnText = document.getElementById('estimateBtnText');
+            const estimateSpinner = document.getElementById('estimateSpinner');
+
+
+            // --- Utility Functions ---
+
+            function setEstimationLoading(isLoading) {
+                estimateHoursBtn.disabled = isLoading;
+                if (isLoading) {
+                    estimateBtnText.textContent = "Thinking... 💭";
+                    estimateSpinner.classList.remove('hidden');
+                } else {
+                    estimateBtnText.textContent = "✨ Magic Estimate ✨";
+                    estimateSpinner.classList.add('hidden');
+                }
+            }
+
+            // Custom modal for success/error messages
+            function alertModal(title, message) {
+                let modal = document.getElementById('simpleAlertModal');
+                const closeHandler = () => { modal.classList.add('hidden'); };
+                
+                document.getElementById('closeAlertBtn').onclick = closeHandler;
+                document.getElementById('okAlertBtn').onclick = closeHandler;
+                
+                document.getElementById('alertTitle').textContent = title;
+                document.getElementById('alertMessage').textContent = message;
+                
+                modal.classList.remove('hidden');
+            }
+
+
+            function formatMinutes(totalMinutes) {
+                if (totalMinutes < 0) return "N/A";
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = Math.round(totalMinutes % 60);
+                
+                let parts = [];
+                if (hours > 0) {
+                    parts.push(`${hours} hr`);
+                }
+                if (minutes > 0) {
+                    parts.push(`${minutes} min`);
+                }
+                if (parts.length === 0) {
+                    return "< 1 min";
+                }
+                return parts.join(' ');
+            }
+            
+            function toIcsDate(date, minutes = 0) {
+                const startDate = new Date(date);
+                startDate.setHours(9, 0, 0, 0);
+                const endDate = new Date(startDate.getTime() + minutes * 60000);
+
+                const format = (d) => {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const hour = String(d.getHours()).padStart(2, '0');
+                    const minute = String(d.getMinutes()).padStart(2, '0');
+                    const second = String(d.getSeconds()).padStart(2, '0');
+                    return `${year}${month}${day}T${hour}${minute}${second}Z`; 
+                };
+
+                return {
+                    start: format(startDate),
+                    end: format(endDate),
+                    now: format(new Date())
+                };
+            }
+
+            function renderCalendarView(schedule) {
+                const container = document.getElementById('calendarView');
+                container.innerHTML = ''; 
+
+                if (schedule.length === 0) {
+                    container.innerHTML = '<p class="text-gray-400 col-span-full text-center italic">Not enough time! 😢</p>';
+                    return;
+                }
+
+                schedule.forEach(item => {
+                    const dateString = item.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'day-bubble';
+                    dayCard.innerHTML = `
+                        <div class="text-xs font-bold text-pink-300 uppercase tracking-wide">${item.date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                        <div class="text-lg font-bold text-gray-700 my-1">${dateString}</div>
+                        <div class="text-sm font-bold text-purple-500 bg-purple-50 rounded-full px-2 py-1 inline-block">${item.displayTime}</div>
+                    `;
+                    container.appendChild(dayCard);
+                });
+            }
+
+            function generateIcsFile(schedule, name, type) {
+                if (schedule.length === 0) {
+                    alertModal('Oops!', 'The schedule is empty. Check your dates! 📅');
+                    return;
+                }
+                
+                const appName = "BubblyPlanner";
+                let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//${appName}//NONSGML v1.0//EN\n`;
+
+                schedule.forEach((item, index) => {
+                    const { start, end, now } = toIcsDate(item.date, item.minutes); 
+                    const uid = `${Date.now()}-${index}@${appName}`;
+                    const formattedSummary = `💖 Study: ${name} (${item.displayTime})`;
+                    const formattedDescription = `Time for ${type}: ${name}. Session ${index + 1}. Good luck! ✨`;
+
+                    icsContent += `BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${now}
+DTSTART:${start}
+DTEND:${end}
+SUMMARY:${formattedSummary}
+DESCRIPTION:${formattedDescription}
+LOCATION:My Happy Study Spot
+END:VEVENT\n`;
+                });
+
+                icsContent += `END:VCALENDAR`;
+
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${name.replace(/\s/g, '_')}_StudyPlan.ics`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alertModal('Yay!', 'Schedule downloaded! Import it to your calendar app. 📅');
+            }
+
+            // --- LLM Integration ---
+
+            async function estimateTotalHours() {
+                const requirementsText = assignmentRequirements.value.trim();
+                const assignmentType = assignmentTypeSelect.value;
+                
+                // Reset Bubble
+                reasoningDiv.classList.remove('visible');
+
+                if (requirementsText.length < 50) {
+                    alertModal("Need More Info!", "Please paste at least 50 characters so I can guess properly! 🥺");
+                    return;
+                }
+
+                setEstimationLoading(true);
+
+                const systemPrompt = "You are a helpful, encouraging academic tutor. Analyze the assignment and provide a time estimate range (min/max hours) and a friendly reasoning. Output JSON.";
+                const userQuery = `Type: ${assignmentType}. Requirements:\n\n${requirementsText}\n\nProvide estimated hour range (min_hours, max_hours) and reasoning.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "min_hours": { type: "INTEGER" },
+                                "max_hours": { type: "INTEGER" },
+                                "reasoning": { type: "STRING" }
+                            },
+                            required: ["min_hours", "max_hours", "reasoning"]
+                        }
+                    }
+                };
+                
+                try {
+                    const response = await fetchWithRetry(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) throw new Error("Empty response");
+                    
+                    const jsonResponse = JSON.parse(text);
+
+                    if (jsonResponse.min_hours && jsonResponse.max_hours) {
+                        let minHours = Math.max(1, Math.ceil(jsonResponse.min_hours)); 
+                        let maxHours = Math.max(minHours, Math.ceil(jsonResponse.max_hours));
+                        const averageHours = Math.ceil((minHours + maxHours) / 2); 
+
+                        totalHoursInput.value = averageHours;
+                        
+                        reasoningText.innerHTML = `
+                            <p class="mb-2"><strong>I think this will take:</strong> <span class="text-pink-500 font-bold">${minHours} - ${maxHours} hours</span>.</p>
+                            <p class="mb-2">I put <span class="text-purple-500 font-bold">${averageHours} hours</span> in the box for you! ✨</p>
+                            <p class="mt-2 italic border-t border-cyan-200 pt-2">"${jsonResponse.reasoning}"</p>
+                        `;
+                        
+                        reasoningDiv.classList.add('visible');
+                        
+                        alertModal("I found it!", `I suggest ${averageHours} hours based on your notes! 💖`);
+
+                    } else {
+                        throw new Error("Invalid JSON");
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    alertModal("Oh no!", "I couldn't estimate the time. Maybe try again? 🥺");
+                } finally {
+                    setEstimationLoading(false);
+                }
+            }
+
+            async function fetchWithRetry(url, options, maxRetries = 5) {
+                for (let i = 0; i < maxRetries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (response.status !== 429) return response; 
+                    } catch (error) {}
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                throw new Error("Timeout");
+            }
+
+            // --- Calculation Logic ---
+
+            function calculateAllocation() {
+                const name = document.getElementById('assignmentName').value.trim();
+                const type = document.getElementById('assignmentType').value;
+                const totalHours = parseFloat(totalHoursInput.value);
+                const dueDateString = document.getElementById('dueDate').value;
+
+                errorMessageDiv.classList.add('hidden');
+                resultOutput.classList.add('hidden');
+
+                if (!name || !type || isNaN(totalHours) || totalHours <= 0 || !dueDateString) {
+                    errorMessageDiv.textContent = "Please fill in all the bubbles! 🛁";
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const dueDate = new Date(dueDateString);
+                dueDate.setHours(0, 0, 0, 0);
+
+                const timeDifference = dueDate.getTime() - today.getTime();
+                let daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+                if (daysRemaining <= 0) {
+                    alertModal("Too Late!", "The due date is today or in the past! Go go go! 🏃‍♀️");
+                    return;
+                }
+
+                let bufferDays = (type === 'Exam' ? 2 : (type === 'Final Exam' ? 3 : 1));
+                let effectiveStudyDays = daysRemaining - bufferDays;
+                
+                if (effectiveStudyDays <= 0) {
+                    effectiveStudyDays = daysRemaining;
+                    bufferDays = 0;
+                }
+
+                const totalMinutes = totalHours * 60;
+                const dailyMinutesAverage = totalMinutes / effectiveStudyDays;
+                const studySchedule = [];
+                let cumulativeMinutes = 0;
+                const oneDay = 1000 * 60 * 60 * 24;
+
+                for (let i = 0; i < effectiveStudyDays; i++) {
+                    const studyDate = new Date(today.getTime() + i * oneDay);
+                    studyDate.setHours(0, 0, 0, 0); 
+
+                    let minutesForDay;
+                    if (i === effectiveStudyDays - 1) {
+                        minutesForDay = totalMinutes - cumulativeMinutes; 
+                    } else {
+                        minutesForDay = Math.round(dailyMinutesAverage);
+                        cumulativeMinutes += minutesForDay;
+                    }
+
+                    if (minutesForDay > 0) {
+                        studySchedule.push({
+                            date: studyDate,
+                            minutes: minutesForDay,
+                            displayTime: formatMinutes(minutesForDay) 
+                        });
+                    }
+                }
+
+                document.getElementById('outputName').textContent = name;
+                document.getElementById('daysRemaining').textContent = daysRemaining;
+                document.getElementById('bufferDays').textContent = bufferDays;
+                document.getElementById('dailyHours').textContent = formatMinutes(dailyMinutesAverage);
+                
+                renderCalendarView(studySchedule);
+                document.getElementById('downloadIcsBtn').onclick = () => generateIcsFile(studySchedule, name, type);
+                
+                resultOutput.classList.remove('hidden');
+                resultOutput.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                calculateAllocation();
+            });
+
+            estimateHoursBtn.addEventListener('click', estimateTotalHours);
+
+            const dateInput = document.getElementById('dueDate');
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.min = tomorrow.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>
