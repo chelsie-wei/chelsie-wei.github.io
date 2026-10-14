@@ -1,14 +1,6 @@
-/*
- * Customization Variables
- */
-
 $accent: #FF0F00;
 $image-size: 85px;
-
-/*
- * Build Variables, don't touch
- */
-
-$max-width: 700px;
-$med-width: 600px;
+// Widen the page to make room for the news sidebar.
+$max-width: 1080px;
+$med-width: 720px;
 $small-width: 480px;

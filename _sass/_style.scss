@@ -4,14 +4,64 @@
  * Basic
  */
 
+ @font-face {
+    font-family: "Clear Sans";
+    src: url("../assets/fonts/ClearSans/ClearSans-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Clear Sans";
+    src: url("../assets/fonts/ClearSans/ClearSans-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Clear Sans";
+    src: url("../assets/fonts/ClearSans/ClearSans-Italic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Clear Sans";
+    src: url("../assets/fonts/ClearSans/ClearSans-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Comfortaa";
+    src: url("../assets/fonts/Comfortaa/Comfortaa-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Comfortaa";
+    src: url("../assets/fonts/Comfortaa/Comfortaa-Medium.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 html {
     height: 100%;
     margin: 0;
     padding: 0;
+    scrollbar-gutter: stable;
 }
 body {
     margin: 0;
-    font-family: "Inconsolata";
+    font-family: "Clear Sans", Arial, sans-serif;
+    font-weight: 400;
     height: 100%;
 }
 a {
@@ -33,7 +83,9 @@ hr {
  */
 
 #author-name {
-    font-size: 30px;
+    font-family: "Comfortaa";
+    font-weight: 600;
+    font-size: 40px;
     color: #272727;
     display: inline-block;
 }
@@ -60,6 +112,39 @@ hr {
 .pull-right {
     @extend .alignable;
     float: right;
+}
+
+// Hover over name
+
+.name-tooltip {
+    position: relative;
+}
+
+.name-tooltip-label {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 10;
+
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.12);
+
+    font-family: "Clear Sans", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #272727;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.name-tooltip:hover .name-tooltip-label,
+.name-tooltip:focus-visible .name-tooltip-label {
+    opacity: 1;
 }
 
 /* Divs */
@@ -127,5 +212,48 @@ hr {
 	}
 }
 
+#author-name {
+    position: relative;
+    overflow: visible;
+}
+
+#author-name .name-tooltip-label {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 100;
+
+    display: block;
+    width: max-content;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: white;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.12);
+
+    font-family: "Clear Sans", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #272727;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+#author-name:hover .name-tooltip-label,
+#author-name:focus-visible .name-tooltip-label {
+    opacity: 1;
+}
+
+#author-name .name-tooltip-label {
+    right: auto;
+    bottom: auto;
+    transform: none;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
 @import "typography";
 @import "tables";
+@import "layout"

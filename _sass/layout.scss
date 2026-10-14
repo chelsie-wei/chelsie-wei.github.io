@@ -1,0 +1,166 @@
+/* Append after your existing typography and tables imports. */
+.container {
+    max-width: $max-width;
+    width: calc(100% - 64px);
+    margin: auto;
+}
+.research-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 48px;
+    padding-bottom: 50px;
+}
+.main-column, .intro-copy { min-width: 0; }
+.content { line-height: 1.65; color: #272727; }
+.content h2 { font-size: 24px; margin: 0 0 22px; font-weight: 700; }
+.content h3 { font-size: 17px; margin: 0 0 8px; line-height: 1.4; }
+.content p { margin: 0 0 16px; }
+.about-grid {
+    display: grid;
+    grid-template-columns: $image-size minmax(0, 1fr);
+    align-items: start;
+    gap: 26px;
+}
+/* Higher specificity overrides the existing right-floated portrait. */
+.content .about-grid .profile-picture {
+    float: none;
+    display: block;
+    position: static;
+    width: $image-size;
+    height: $image-size;
+    margin: 4px 0 0;
+    padding: 0;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.research-keywords { font-size: 14px; color: #666; margin-top: 20px; }
+.research-keywords strong { color: #272727; }
+.section { margin-top: 38px; }
+.project { padding: 0 0 22px; margin-bottom: 22px; border-bottom: 1px solid #ededed; }
+.project:last-child { margin-bottom: 0; }
+.project p { margin-bottom: 8px; }
+.tags { font-size: 12px; color: #777; }
+.publication { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 22px; }
+.publication-visual { aspect-ratio: 5 / 3; background: #f4f4f4; overflow: hidden; }
+.content .publication-visual img, .publication-visual svg { width: 100%; height: 100%; display: block; object-fit: cover; }
+.pub-label { font-size: 12px; color: #777; margin-bottom: 8px; }
+.content .authors { font-size: 14px; margin-bottom: 6px; }
+.content .abstract { font-size: 14px; margin-top: 12px; }
+.pub-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #777; }
+.news-column { border-left: 1px solid #e8e8e8; padding-left: 25px; }
+.news-item { margin: 0 0 24px; }
+.news-date { display: block; color: #777; font-size: 13px; margin-bottom: 4px; }
+.news-column p { font-size: 14px; }
+.placeholder-note { color: #777; font-size: 12px; }
+.content a:focus-visible, .navbar a:focus-visible { outline: 2px solid #ff0f00; outline-offset: 4px; }
+@media (max-width: 800px) {
+    .container { max-width: 720px; width: calc(100% - 44px); }
+    .research-layout { grid-template-columns: minmax(0, 1fr) 180px; gap: 28px; }
+    .news-column { padding-left: 18px; }
+    .about-grid { gap: 18px; }
+    .publication { grid-template-columns: 1fr 2fr; gap: 16px; }
+}
+@media (max-width: 650px) {
+    .container { max-width: 83%; width: 83%; }
+    .research-layout { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+    .news-column { border-left: 0; border-top: 1px solid #e8e8e8; padding: 25px 0 0; }
+    .about-grid { grid-template-columns: $image-size minmax(0, 1fr); }
+}
+@media (max-width: 500px) {
+    .research-layout { margin-top: 30px; }
+    .publication { grid-template-columns: 1fr; }
+    .publication-visual { max-width: 240px; }
+}
+@media (max-width: 380px) {
+    .about-grid { grid-template-columns: 1fr; }
+}
+
+/* Larger rectangular portrait with responsive, percentage-based hotspots. */
+.content .about-grid { grid-template-columns: 240px minmax(0, 1fr); }
+.profile-figure { margin: 4px 0 0; min-width: 0; }
+.interactive-portrait { position: relative; width: 100%; }
+.content .about-grid .interactive-portrait .profile-picture {
+  display: block; width: 100%; height: auto; margin: 0; padding: 0;
+  float: none; border-radius: 3px; object-fit: contain;
+}
+.profile-figure figcaption { margin-top: 9px; color: #777; font-size: 14px; line-height: 1.4; }
+.portrait-hotspot {
+  position: absolute; border: 0; padding: 0; background: transparent;
+  cursor: pointer; border-radius: 5px; font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.hotspot-chelsie { left: 29%; top: 18%; width: 36%; height: 51%; }
+.hotspot-athena { left: 0%; top: 43%; width: 28%; height: 34%; }
+.hotspot-griffin { left: 72%; top: 40%; width: 28%; height: 42%; }
+.hotspot-bandaid { left: 83%; top: 78%; width: 17%; height: 16%;}
+.portrait-label {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%) translateY(4px);
+  padding: 7px 16px; white-space: nowrap; font-size: 16px; line-height: 1.35; letter-spacing: -0.5px;
+  background: rgba(255,255,255,.96); color: #272727; border-radius: 999px;
+  box-shadow: 0 2px 9px rgba(0,0,0,.12); opacity: 0; pointer-events: none;
+  // transition: opacity .15s ease, transform .15s ease;
+}
+.portrait-hotspot:hover .portrait-label,
+.portrait-hotspot:focus-visible .portrait-label,
+.portrait-hotspot[aria-pressed="true"] .portrait-label { opacity: 1; transform: translateX(-50%) translateY(0); }
+.portrait-hotspot:focus-visible { outline: 2px solid #FF0F00; outline-offset: -2px; }
+@media(max-width: 1000px) { .content .about-grid { grid-template-columns: 210px minmax(0,1fr); gap: 22px; } }
+@media(max-width: 800px) and (min-width: 651px) {
+  .research-layout { grid-template-columns: minmax(0,1fr) 165px; gap: 24px; }
+  .content .about-grid { grid-template-columns: 1fr; }
+  .profile-figure { width: 260px; max-width: 100%; }
+}
+@media(max-width:650px) { .content .about-grid { grid-template-columns: 1fr; } .profile-figure { width: 240px; max-width: 100%; } }
+@media(prefers-reduced-motion:reduce) { .portrait-label { transition: none; } }
+
+.portrait-label {
+    display: block;
+    width: max-content;
+    height: auto;
+
+    top: auto;
+    right: auto;
+    bottom: 8px;
+    left: 50%;
+
+    padding: 7px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+
+    font-family: "Comfortaa";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: normal;
+
+    background: rgba(255, 255, 255, 0.96);
+    color: #272727;
+    pointer-events: none;
+
+    transform: translateX(-50%);
+    // transition: opacity 0.15s ease;
+}
+
+/* Let JavaScript control position without stretching the bubble. */
+.portrait-hotspot.tracking-pointer .portrait-label {
+    right: auto;
+    bottom: auto;
+    transform: none;
+}
+
+/* Override older hover rules that apply a transform. */
+.portrait-hotspot.tracking-pointer:hover .portrait-label,
+.portrait-hotspot.tracking-pointer:focus-visible .portrait-label,
+.portrait-hotspot.tracking-pointer[aria-pressed="true"] .portrait-label {
+    transform: none;
+}
+
+/* Make only bandaid hotpost smaller*/ 
+.hotspot-bandaid .portrait-label {
+    font-size: 12px;
+}
+
+// Only news margin gets ClearSans Light
+.news-column p {
+    font-weight: 300;
+}
